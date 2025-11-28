@@ -1,7 +1,7 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  environment = { NODE_ENV = "production" }
+  environment = { NODE_ENV = "production", NPM_FLAGS = "--include=dev" }
 
 [context.production.environment]
   # Set this variable in the Netlify UI to match the value from your local .env.local

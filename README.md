@@ -22,6 +22,7 @@ View your app in AI Studio: https://ai.studio/apps/temp/1
 
 1. Connect the `mdh-grafos` repository to Netlify (via drag & drop or Git provider).
 2. Ensure Netlify uses `npm run build` as the build command and `dist` as the publish directory (configured in `netlify.toml`).
+   - The build runs in production mode but needs development-only tools like Vite, so Netlify installs dev dependencies via `NPM_FLAGS=--include=dev` (already set in `netlify.toml`).
 3. Define `VITE_GEMINI_API_KEY` in the Netlify environment variables with your Gemini API key.
 4. Trigger a deploy (new push or manual deploy) to build and publish the static site.
 
