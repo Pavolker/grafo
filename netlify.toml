@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  environment = { NODE_ENV = "production" }
+
+[context.production.environment]
+  # Set this variable in the Netlify UI to match the value from your local .env.local
+  VITE_GEMINI_API_KEY = ""  # replace with your key during deployment
