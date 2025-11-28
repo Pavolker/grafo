@@ -1,11 +1,11 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { GraphData, DetailLevel, GraphType } from "../types";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 if (!apiKey) {
-  console.warn("VITE_GEMINI_API_KEY environment variable not set. Gemini API calls will fail.");
+  console.warn("VITE_GEMINI_API_KEY não configurada. Chamadas à Gemini serão desativadas.");
 }
-const genAI = new GoogleGenerativeAI(apiKey);
 
 const graphSchema = {
   type: SchemaType.OBJECT,
@@ -95,6 +95,9 @@ export const generateGraphFromText = async (text: string, level: DetailLevel, ty
   `;
 
   try {
+    if (!genAI) {
+      throw new Error("Chave da API Gemini ausente. Configure `VITE_GEMINI_API_KEY` no Netlify.");
+    }
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-2.0-flash',
       generationConfig: {
@@ -113,11 +116,11 @@ export const generateGraphFromText = async (text: string, level: DetailLevel, ty
     return data;
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    let errorMessage = "Failed to generate graph.";
-    if (error.message && error.message.includes("API key")) {
-      errorMessage = "Invalid or missing API Key. Please check your configuration.";
+    let errorMessage = "Falha ao gerar o grafo.";
+    if (error.message && (error.message.includes("API key") || error.message.includes("ausente"))) {
+      errorMessage = "Chave de API inválida ou ausente. Verifique a configuração no Netlify.";
     } else if (error.status === 503) {
-      errorMessage = "Service temporarily unavailable. Please try again later.";
+      errorMessage = "Serviço temporariamente indisponível. Tente novamente mais tarde.";
     }
     throw new Error(errorMessage);
   }

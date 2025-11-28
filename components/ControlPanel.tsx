@@ -28,6 +28,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   hasData,
   onExportJSON
 }) => {
+  const hasApiKey = !!import.meta.env.VITE_GEMINI_API_KEY;
   const handleSample = () => {
     setInputText("A Inteligência Artificial Generativa (IA Generativa) é um tipo de inteligência artificial focada na criação de novos conteúdos, como texto, imagens, áudio e vídeo, em resposta a prompts do usuário. Diferente da IA tradicional, que analisa dados para fazer previsões, a IA Generativa utiliza modelos de aprendizado profundo, como Redes Neurais e Transformers, para aprender padrões em grandes volumes de dados e gerar novas informações originais. Exemplos notáveis incluem o GPT-4 da OpenAI, o Gemini do Google e o Claude da Anthropic. Essas tecnologias estão transformando setores como marketing, programação, design e educação, permitindo automação criativa e personalização em escala.");
   };
@@ -43,6 +44,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 font-medium leading-relaxed text-center">
           Transforme seus textos em <span className="text-indigo-600 dark:text-indigo-400">Grafos de Conhecimento</span> interativos.
         </p>
+        {!hasApiKey && (
+          <div className="mt-3 rounded-xl border border-amber-300/60 bg-amber-50/80 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 px-4 py-3 text-xs font-semibold shadow-sm">
+            Gemini desativada: configure a variável `VITE_GEMINI_API_KEY` no Netlify.
+          </div>
+        )}
       </div>
 
       {/* Input Area */}
@@ -130,10 +136,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="flex flex-col gap-3">
         <button
           onClick={onGenerate}
-          disabled={isLoading || inputText.trim().length === 0}
+          disabled={isLoading || inputText.trim().length === 0 || !hasApiKey}
           className={`
             w-full py-3.5 px-4 rounded-xl font-bold text-white shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 transition-all duration-300 transform
-            ${isLoading || inputText.trim().length === 0
+            ${isLoading || inputText.trim().length === 0 || !hasApiKey
               ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70 grayscale'
               : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-95'
             }
@@ -150,7 +156,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           ) : (
             <>
               <span className="material-icons-round text-lg">auto_awesome</span>
-              Gerar Grafo
+              {hasApiKey ? 'Gerar Grafo' : 'Configurar chave requerida'}
             </>
           )}
         </button>

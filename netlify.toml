@@ -4,5 +4,5 @@
   environment = { NODE_ENV = "production", NPM_FLAGS = "--include=dev" }
 
 [context.production.environment]
-  # Set this variable in the Netlify UI to match the value from your local .env.local
-  VITE_GEMINI_API_KEY = ""  # replace with your key during deployment
+  # Defina `VITE_GEMINI_API_KEY` apenas no painel do Netlify (Site settings → Environment variables).
+  # Não configure valores sensíveis aqui para evitar sobreposição com a UI e exposição no repositório.
